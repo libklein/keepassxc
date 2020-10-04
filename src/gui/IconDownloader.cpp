@@ -74,15 +74,17 @@ void IconDownloader::setUrl(const QString& entryUrl)
 {
     m_url = entryUrl;
     QUrl url(m_url);
-    if (!url.isValid()) {
+    if (!url.isValid() || (url.scheme().isEmpty() && url.scheme() != "https://" && url.scheme() != "http://")) {
         return;
     }
 
     m_redirects = 0;
     m_urlsToTry.clear();
 
+    // If no scheme is specified, fall back to https (We don't want to compromise security, even when only downloading a
+    // favicon).
     if (url.scheme().isEmpty()) {
-        url.setUrl(QString("https://%1").arg(url.toString()));
+        url.setScheme("https://");
     }
 
     QString fullyQualifiedDomain = url.host();
@@ -91,11 +93,10 @@ void IconDownloader::setUrl(const QString& entryUrl)
     // searching for a match with the returned address(es).
     bool hostIsIp = false;
     QList<QHostAddress> hostAddressess = QHostInfo::fromName(fullyQualifiedDomain).addresses();
-    for (const auto& addr : hostAddressess) {
-        if (addr.toString() == fullyQualifiedDomain) {
-            hostIsIp = true;
-        }
-    }
+    hostIsIp =
+        std::any_of(hostAddressess.begin(), hostAddressess.end(), [&fullyQualifiedDomain](const QHostAddress& addr) {
+            return addr.toString() == fullyQualifiedDomain;
+        });
 
     // Determine the second-level domain, if available
     QString secondLevelDomain;
@@ -117,11 +118,14 @@ void IconDownloader::setUrl(const QString& entryUrl)
     }
 
     // Add a direct pull of the website's own favicon.ico file
-    m_urlsToTry.append(QUrl(url.scheme() + "://" + fullyQualifiedDomain + "/favicon.ico"));
+    QUrl favicon_url = url;
+    favicon_url.setPath("/favicon.ico");
+    m_urlsToTry.append(favicon_url);
 
     // Also try a direct pull of the second-level domain (if possible)
     if (!hostIsIp && fullyQualifiedDomain != secondLevelDomain) {
-        m_urlsToTry.append(QUrl(url.scheme() + "://" + secondLevelDomain + "/favicon.ico"));
+        favicon_url.setHost(secondLevelDomain);
+        m_urlsToTry.append(favicon_url);
     }
 }
 
