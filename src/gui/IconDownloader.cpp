@@ -74,7 +74,7 @@ void IconDownloader::setUrl(const QString& entryUrl)
 {
     m_url = entryUrl;
     QUrl url(m_url);
-    if (!url.isValid() || (url.scheme().isEmpty() && url.scheme() != "https://" && url.scheme() != "http://")) {
+    if (!url.isValid()) {
         return;
     }
 
@@ -84,7 +84,7 @@ void IconDownloader::setUrl(const QString& entryUrl)
     // If no scheme is specified, fall back to https (We don't want to compromise security, even when only downloading a
     // favicon).
     if (url.scheme().isEmpty()) {
-        url.setScheme("https://");
+        url.setScheme("https");
     }
 
     QString fullyQualifiedDomain = url.host();

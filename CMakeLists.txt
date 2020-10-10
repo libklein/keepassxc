@@ -46,7 +46,7 @@ option(WITH_CCACHE "Use ccache for build" OFF)
 set(WITH_XC_ALL OFF CACHE BOOL "Build in all available plugins")
 
 option(WITH_XC_AUTOTYPE "Include Auto-Type." ON)
-option(WITH_XC_NETWORKING "Include networking code (e.g. for downloading website icons)." OFF)
+option(WITH_XC_NETWORKING "Include networking code (e.g. for downloading website icons)." ON)
 option(WITH_XC_BROWSER "Include browser integration with keepassxc-browser." OFF)
 option(WITH_XC_YUBIKEY "Include YubiKey support." OFF)
 option(WITH_XC_SSHAGENT "Include SSH agent support." OFF)
