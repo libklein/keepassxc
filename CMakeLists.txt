@@ -58,7 +58,7 @@ endif()
 if(APPLE)
     option(WITH_XC_TOUCHID "Include TouchID support for macOS." OFF)
 endif()
-option(WITH_XC_DOCS "Enable building of documentation" ON)
+option(WITH_XC_DOCS "Enable building of documentation" OFF)
 
 if(WITH_CCACHE)
     # Use the Compiler Cache (ccache) program

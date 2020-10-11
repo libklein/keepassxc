@@ -11,9 +11,9 @@ void TestIconDownloader::testFaviconResolve()
     // Create downloader
     IconDownloader downloader;
 
-    std::vector<std::pair<QString, std::vector<QString>>> test_urls{
-        {"rakuten.co.jp", {}},
-        {"godaddy.com", {}},
+    std::vector<std::pair<QString, std::vector<QString>>> valid_urls{
+        {"www.rakuten.co.jp", {}},
+        {"de.godaddy.com", {}},
         {"barnesandnoble.com", {}},
         {"opera.com", {}},
         {"freewebs.com", {}},
@@ -36,13 +36,36 @@ void TestIconDownloader::testFaviconResolve()
         {"discuz.net", {}},
         {"phoca.cz", {}},
         {"fotki.com", {}},
-        {"ezinearticles.com", {}}
+        {"www.ezinearticles.com", {}}
     };
 
-    for(const auto &next_test : test_urls) {
+    for(const auto &next_test : valid_urls) {
         downloader.setUrl(next_test.first);
         for(const auto & x : downloader.m_urlsToTry) {
             std::cerr << x.toString().toStdString() << std::endl;
         }
     }
+
+    // Invalid URL
+
+    // Missing schema
+
+    // Missing host
+
+    // Well-formed URL
+    //QCOMPARE();
+
+    // URL with port
+
+    // 2nd level domain
+
+    // 2nd level domain .co.uk special case
+
+    // 2nd level domain lots of subdomains
+
+    // IP
+
+    // IP with port
+
+    // Username + Password
 }

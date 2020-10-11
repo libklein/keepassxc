@@ -73,8 +73,8 @@ namespace
 void IconDownloader::setUrl(const QString& entryUrl)
 {
     m_url = entryUrl;
-    QUrl url(m_url);
-    if (!url.isValid()) {
+    QUrl url = QUrl::fromUserInput(m_url);
+    if (!url.isValid() || url.host().isEmpty()) {
         return;
     }
 
@@ -101,7 +101,7 @@ void IconDownloader::setUrl(const QString& entryUrl)
     // Determine the second-level domain, if available
     QString secondLevelDomain;
     if (!hostIsIp) {
-        secondLevelDomain = getSecondLevelDomain(m_url);
+        secondLevelDomain = getSecondLevelDomain(url);
     }
 
     // Start with the "fallback" url (if enabled) to try to get the best favicon
@@ -123,7 +123,7 @@ void IconDownloader::setUrl(const QString& entryUrl)
     m_urlsToTry.append(favicon_url);
 
     // Also try a direct pull of the second-level domain (if possible)
-    if (!hostIsIp && fullyQualifiedDomain != secondLevelDomain) {
+    if (!hostIsIp && fullyQualifiedDomain != secondLevelDomain && !secondLevelDomain.isEmpty()) {
         favicon_url.setHost(secondLevelDomain);
         m_urlsToTry.append(favicon_url);
     }
